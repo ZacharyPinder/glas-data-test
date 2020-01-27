@@ -16,9 +16,13 @@ def parent_tree(tree, depth):
         if item["parentId"] in parents:
             i += 1
             output[num2words(i)] = {"id" : item["id"], "parentId" : item["parentId"], "children" : []}
+            in_tree.append(item["id"])
             for item2 in output.items():
                 if item2[1]["id"] == item["parentId"]:
                     item2[1]["children"].append(item["id"])
+    parents = parents + in_tree
+    in_tree = []
+
     return(output)
             
 
