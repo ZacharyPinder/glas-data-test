@@ -5,6 +5,8 @@ def parent_tree(tree, depth):
     output = {}
     parents = []
     in_tree = []
+    layers = 0
+    
     if depth == 0:
         return(output)
     for item in tree:
@@ -12,18 +14,22 @@ def parent_tree(tree, depth):
             i =+ 1
             output[num2words(i)] = {"id" : item["id"], "parentId" : None, "children" : []}
             parents.append(item["id"])
-    for item in tree:
-        if item["parentId"] in parents:
-            i += 1
-            output[num2words(i)] = {"id" : item["id"], "parentId" : item["parentId"], "children" : []}
-            in_tree.append(item["id"])
-            for item2 in output.items():
-                if item2[1]["id"] == item["parentId"]:
-                    item2[1]["children"].append(item["id"])
-    parents = parents + in_tree
-    in_tree = []
 
+    while layers != depth and len(parents) != len(tree):
+        for item in tree:
+            if item["parentId"] in parents and item["id"] not in parents:
+                i += 1
+                output[num2words(i)] = {"id" : item["id"], "parentId" : item["parentId"], "children" : []}
+                in_tree.append(item["id"])
+                for item2 in output.items():
+                    if item2[1]["id"] == item["parentId"]:
+                        item2[1]["children"].append(item["id"])
+        parents = parents + in_tree
+        in_tree = []
+        layers += 1
+    
     return(output)
+
             
 
 with open("senario/2.json") as file:
